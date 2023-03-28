@@ -35,16 +35,16 @@ class StudentDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(DetailViewModel::class.java)
         viewModel.fetch()
-        observeViewModel(view)
+        observeViewModel()
     }
 
-    private fun observeViewModel(view: View) {
+    private fun observeViewModel() {
         viewModel.studentLD.observe(viewLifecycleOwner, Observer {
-            Picasso.get().load(it.photoUrl).into(view.findViewById<ImageView>(R.id.imageView2))
-            view.findViewById<EditText>(R.id.txtID).setText(it.id)
-            view.findViewById<EditText>(R.id.txtName).setText(it.name)
-            view.findViewById<EditText>(R.id.txtBod).setText(it.dob.toString())
-            view.findViewById<EditText>(R.id.txtPhone).setText(it.phone)
+            Picasso.get().load(it.photoUrl).into(view?.findViewById<ImageView>(R.id.imageView2))
+            view?.findViewById<EditText>(R.id.txtID)?.setText(it.id)
+            view?.findViewById<EditText>(R.id.txtName)?.setText(it.name)
+            view?.findViewById<EditText>(R.id.txtBod)?.setText(it.dob.toString())
+            view?.findViewById<EditText>(R.id.txtPhone)?.setText(it.phone)
         })
     }
 }

@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.week4_160420138.R
 import com.example.week4_160420138.viewmodel.ListViewModel
 
@@ -34,29 +35,39 @@ class StudentListFragment : Fragment() {
         viewModel.refresh()
         view.findViewById<RecyclerView>(R.id.recView).layoutManager = LinearLayoutManager(context)
         view.findViewById<RecyclerView>(R.id.recView).adapter = studentListAdapter
-        observeViewModel(view)
+        observeViewModel()
+
+        view.findViewById<SwipeRefreshLayout>(R.id.refreshLayout).setOnRefreshListener {
+            view.findViewById<RecyclerView>(R.id.recView).visibility = View.GONE
+            view.findViewById<TextView>(R.id.txtError).visibility = View.GONE
+            view.findViewById<ProgressBar>(R.id.progressLoad).visibility = View.VISIBLE
+            viewModel.refresh()
+            view.findViewById<SwipeRefreshLayout>(R.id.refreshLayout).isRefreshing = false
+        }
+
     }
 
-    private fun observeViewModel(view: View) {
+    private fun observeViewModel() {
         viewModel.studentsLD.observe(viewLifecycleOwner, Observer {
             studentListAdapter.updateStudentList(it)
         })
 
         viewModel.studentLoadErrorLD.observe(viewLifecycleOwner, Observer {
+            val txterror = view?.findViewById<TextView>(R.id.txtError)
             if(it == true) {
-                view.findViewById<TextView>(R.id.txtError).visibility = View.VISIBLE
+                txterror?.visibility = View.VISIBLE
             } else {
-                view.findViewById<TextView>(R.id.txtError).visibility = View.GONE
+                txterror?.visibility = View.GONE
             }
         })
 
         viewModel.loadingLD.observe(viewLifecycleOwner, Observer {
             if(it == true) {
-                view.findViewById<RecyclerView>(R.id.recView).visibility = View.GONE
-                view.findViewById<ProgressBar>(R.id.progressLoad).visibility = View.VISIBLE
+                view?.findViewById<RecyclerView>(R.id.recView)?.visibility = View.GONE
+                view?.findViewById<ProgressBar>(R.id.progressLoad)?.visibility = View.VISIBLE
             } else {
-                view.findViewById<RecyclerView>(R.id.recView).visibility = View.VISIBLE
-                view.findViewById<ProgressBar>(R.id.progressLoad).visibility = View.GONE
+                view?.findViewById<RecyclerView>(R.id.recView)?.visibility = View.VISIBLE
+                view?.findViewById<ProgressBar>(R.id.progressLoad)?.visibility = View.GONE
             }
         })
     }
