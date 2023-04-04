@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.week4_160420138.R
 import com.example.week4_160420138.model.Student
+import com.example.week4_160420138.util.loadImage
 import com.example.week4_160420138.viewmodel.DetailViewModel
 import com.example.week4_160420138.viewmodel.ListViewModel
 import com.squareup.picasso.Picasso
@@ -22,6 +23,7 @@ import com.squareup.picasso.Picasso
 class StudentDetailFragment : Fragment() {
 
     private lateinit var viewModel:DetailViewModel
+    private var people_id = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,18 +35,22 @@ class StudentDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if(arguments != null){
+            people_id = StudentDetailFragmentArgs.fromBundle(requireArguments()).id
+        }
         viewModel = ViewModelProvider(this).get(DetailViewModel::class.java)
-        viewModel.fetch()
-        observeViewModel()
+        viewModel.fetch(people_id)
+        observeViewModel(view)
     }
 
-    private fun observeViewModel() {
+    private fun observeViewModel(view:View) {
         viewModel.studentLD.observe(viewLifecycleOwner, Observer {
-            Picasso.get().load(it.photoUrl).into(view?.findViewById<ImageView>(R.id.imageView2))
-            view?.findViewById<EditText>(R.id.txtID)?.setText(it.id)
-            view?.findViewById<EditText>(R.id.txtName)?.setText(it.name)
-            view?.findViewById<EditText>(R.id.txtBod)?.setText(it.dob.toString())
-            view?.findViewById<EditText>(R.id.txtPhone)?.setText(it.phone)
+            val progressBar = view.findViewById<ProgressBar>(R.id.progressBar2)
+            view.findViewById<ImageView>(R.id.imageView2).loadImage(it.photoUrl, progressBar)
+            view.findViewById<EditText>(R.id.txtID)?.setText(it.id)
+            view.findViewById<EditText>(R.id.txtName)?.setText(it.name)
+            view.findViewById<EditText>(R.id.txtBod)?.setText(it.dob.toString())
+            view.findViewById<EditText>(R.id.txtPhone)?.setText(it.phone)
         })
     }
 }
