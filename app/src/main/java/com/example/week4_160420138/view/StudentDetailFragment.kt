@@ -1,24 +1,24 @@
 package com.example.week4_160420138.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.week4_160420138.R
-import com.example.week4_160420138.model.Student
 import com.example.week4_160420138.util.loadImage
 import com.example.week4_160420138.viewmodel.DetailViewModel
-import com.example.week4_160420138.viewmodel.ListViewModel
-import com.squareup.picasso.Picasso
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
 class StudentDetailFragment : Fragment() {
 
@@ -45,12 +45,27 @@ class StudentDetailFragment : Fragment() {
 
     private fun observeViewModel(view:View) {
         viewModel.studentLD.observe(viewLifecycleOwner, Observer {
+            var student = it
             val progressBar = view.findViewById<ProgressBar>(R.id.progressBar2)
             view.findViewById<ImageView>(R.id.imageView2).loadImage(it.photoUrl, progressBar)
             view.findViewById<EditText>(R.id.txtID)?.setText(it.id)
             view.findViewById<EditText>(R.id.txtName)?.setText(it.name)
             view.findViewById<EditText>(R.id.txtBod)?.setText(it.dob.toString())
             view.findViewById<EditText>(R.id.txtPhone)?.setText(it.phone)
+
+            val btnNotif = view.findViewById<Button>(R.id.btnNotif)
+            btnNotif?.setOnClickListener {
+                Observable.timer(5, TimeUnit.SECONDS)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        Log.d("Messages", "five seconds")
+                        MainActivity.showNotification(student.name.toString(),
+                            "A new notification created",
+                            R.drawable.ic_baseline_error_24)
+                    }
+            }
+
         })
     }
 }
