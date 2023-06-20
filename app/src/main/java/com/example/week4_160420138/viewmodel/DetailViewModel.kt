@@ -28,7 +28,7 @@ class DetailViewModel(application: Application): AndroidViewModel(application)  
 //            "https://img.okezone.com/content/2017/02/21/298/1623840/selain-roti-tawar-ini-loh-4-jenis-roti-yang-paling-sering-dikonsumsi-masyarakat-indonesia-u3Mihn3ZBk.jpg")
 
         queue = Volley.newRequestQueue(getApplication())
-        val url = "http://adv.jitusolution.com/student.php?id=$people_id"
+        val url = "http://jitusolution.com/student.php?id=$people_id"
 
         val stringRequest = StringRequest(
             Request.Method.GET, url,
