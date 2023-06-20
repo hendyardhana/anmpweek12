@@ -7,6 +7,9 @@
         <variable
             name="student"
             type="com.example.week4_160420138.model.Student" />
+        <variable
+            name="listener"
+            type="com.example.week4_160420138.view.ButtonDetailClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,6 +39,8 @@
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:scaleType="centerCrop"
+                    android:imageUrl="@{student.photoUrl}"
+                    android:progressBar="@{progressBar}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -69,6 +74,8 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
                     android:text="Detail"
+                    android:tag="@{student.id}"
+                    android:onClick="@{listener::onButtonDetailClick}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
 

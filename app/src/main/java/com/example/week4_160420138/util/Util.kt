@@ -4,12 +4,19 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
+import androidx.databinding.BindingAdapter
 import com.example.week4_160420138.R
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+
+@BindingAdapter("android:imageUrl", "android:progressBar")
+fun loadPhotoUrl(view: ImageView, url:String, pb:ProgressBar) {
+    view.loadImage(url,pb)
+}
 
 fun ImageView.loadImage(url: String?, progressBar: ProgressBar){
     Picasso.get().load(url).resize(400,400).centerCrop()
@@ -18,6 +25,7 @@ fun ImageView.loadImage(url: String?, progressBar: ProgressBar){
                 progressBar.visibility = View.GONE
             }
             override fun onError(e: Exception?) {
+                Log.e("errorimg", "Error")
             }
         })
 }
